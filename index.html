@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>paceman</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="node_modules/mathjs/dist/math.min.js"></script>
+    <script src="node_modules/assetLoader.js"></script>
+    <script src="class/Vector.js"></script>
+  
+</head>
+<body>
+    <script>
+      $().ready(function(){
+        $("#canvas").width(window.innerWidth);
+        $("#canvas").height(window.innerHeight);
+      })   
+
+      // the map is 50*50 units width& height
+      // each unit 1 equal to 10 pixel
+      /*  -------     -------
+         |      |     |      |
+         |       -----       |
+         |                   |
+         |                   |
+         |-------------------| 
+      */
+      var pathData=[new Vector(1,1),new Vector(20,1),new Vector(20,5),new Vector(30,5),new Vector(30,1),new Vector(49,1),new Vector(49,49),new Vector(1,49),new Vector(1,1)];
+      var mapData=math.zeros(51,51);
+      
+      mapData=setPathFlag(pathData,mapData);
+      console.log(mapData);
+
+      function setPathFlag(path,map){
+        var origPt= path[0];
+        var desPt;
+        i=1;
+        while(path[i]){
+          desPt=path[i];
+          if(origPt.x==desPt.x){
+            // vertical line
+            for(var c=origPt.y;c<desPt.y+1;c++){
+              map._data[origPt.x][c]=1;     // set the value to 1 , which stands for road
+            }
+          }else{
+            // horizontal line
+            for(var r=origPt.x;r<desPt.x+1;r++){
+              map._data[r][origPt.y]=1;     // set the value to 1 , which stands for road
+            }
+          } 
+          origPt=desPt;
+          i++;
+        }
+        return map;
+      }
+
+
+    </script>
+    <canvas id="canvas"></canvas>
+
+
+</body>
+</html>
